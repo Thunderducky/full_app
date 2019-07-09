@@ -1,5 +1,6 @@
 const fs = require('fs');
 const mysql = require('mysql');
+const path = require("path");
 let connection = null;
 if(process.env.JAWSDB_URL){
   connection = mysql.createConnection(process.env.JAWSDB_URL);
@@ -15,10 +16,12 @@ if(process.env.JAWSDB_URL){
   })
 }
 
-fs.readFile("../seed.sql", "utf-8", function(err, data){
-  connection.query(data, function(err){
-    console.log(err);
-    console.log("Seeding done");
-    connection.end();
-  });
+fs.readFile(path.join(__dirname, "../seed.sql"), "utf-8", function(err, data){
+  console.log(err);
+  console.log(data);
+  // connection.query(data, function(err){
+  //   console.log(err);
+  //   console.log("Seeding done");
+  //   connection.end();
+  // });
 });
