@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <h1>My Page</h1>
+  <form>
+    <input id="myText" type="text"  placeholder="text goes here"/>
+    <button id="submit">Submit</button>
+    <div id="notes">
+
+    </div>
+  </form>
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    $("#submit").click(function(event){
+      event.preventDefault();
+      var myText = $("#myText").val();
+      $.post("/api/notes", {text: myText}).then(function(){
+        $("#myText").val("");
+        renderNotes();
+      })
+    })
+
+    function renderNotes(){
+      $.get("/api/notes", function(response){
+        console.log(response);
+        $("#notes").html("");
+        for(let i = 0; i < response.length; i++){
+          $("#notes").append(
+            `
+              <p>
+                #${response[i].id} - ${response[i].text} <button class="delete" data-id="${response[i].id}">X</button>
+              </p>
+            `)
+        }
+      })
+    }
+
+    $(document).on('click', '.delete', function(event){
+      event.preventDefault();
+
+      $.ajax({method: "DELETE", url: "/api/notes/" + $(this).attr("data-id")}).then(function(){
+        renderNotes();
+      })
+    })
+
+    renderNotes();
+  </script>
+</body>
+</html>
