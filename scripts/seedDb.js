@@ -21,4 +21,4 @@ fs.readFile("../seed.sql", "utf-8", function(err, data){
     console.log("Seeding done");
     connection.end();
   });
-})g
+});
